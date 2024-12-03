@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use App\Entity\Oficio;
 use App\Entity\Delegacion;
 use App\Repository\RegistroRepository;
@@ -11,10 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-
 #[ORM\Entity(repositoryClass: RegistroRepository::class)]
 #[Vich\Uploadable]
-
 class Registro
 {
     #[ORM\Id]
@@ -69,12 +68,12 @@ class Registro
 
     #[ORM\ManyToOne(inversedBy: 'registros')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?oficio $oficio = null;
+    private ?Oficio $oficio = null;
 
     /**
-     * @var Collection<int, delegacion>
+     * @var Collection<int, Delegacion>
      */
-    #[ORM\ManyToMany(targetEntity: delegacion::class, inversedBy: 'registros')]
+    #[ORM\ManyToMany(targetEntity: Delegacion::class, inversedBy: 'registros')]
     private Collection $delegacion;
 
     /**
@@ -82,6 +81,9 @@ class Registro
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'registro')]
     private Collection $comments;
+
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $status = true; // Por defecto habilitado
 
     public function __construct()
     {
@@ -94,8 +96,6 @@ class Registro
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
@@ -115,7 +115,7 @@ class Registro
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -127,7 +127,7 @@ class Registro
         return $this->email;
     }
 
-    public function setEmail(?string $email): static
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -139,7 +139,7 @@ class Registro
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -151,7 +151,7 @@ class Registro
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -163,7 +163,7 @@ class Registro
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
 
@@ -175,7 +175,7 @@ class Registro
         return $this->dni;
     }
 
-    public function setDni(string $dni): static
+    public function setDni(string $dni): self
     {
         $this->dni = $dni;
 
@@ -187,7 +187,7 @@ class Registro
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 
@@ -199,7 +199,7 @@ class Registro
         return $this->workAddress;
     }
 
-    public function setWorkAddress(?string $workAddress): static
+    public function setWorkAddress(?string $workAddress): self
     {
         $this->workAddress = $workAddress;
 
@@ -211,7 +211,7 @@ class Registro
         return $this->payment;
     }
 
-    public function setPayment(string $payment): static
+    public function setPayment(string $payment): self
     {
         $this->payment = $payment;
 
@@ -223,7 +223,7 @@ class Registro
         return $this->time;
     }
 
-    public function setTime(string $time): static
+    public function setTime(string $time): self
     {
         $this->time = $time;
 
@@ -235,7 +235,7 @@ class Registro
         return $this->certification;
     }
 
-    public function setCertification(bool $certification): static
+    public function setCertification(bool $certification): self
     {
         $this->certification = $certification;
 
@@ -247,7 +247,7 @@ class Registro
         return $this->institution;
     }
 
-    public function setInstitution(?string $institution): static
+    public function setInstitution(?string $institution): self
     {
         $this->institution = $institution;
 
@@ -259,7 +259,7 @@ class Registro
         return $this->recomendation;
     }
 
-    public function setRecomendation(?string $recomendation): static
+    public function setRecomendation(?string $recomendation): self
     {
         $this->recomendation = $recomendation;
 
@@ -271,19 +271,19 @@ class Registro
         return $this->images;
     }
 
-    public function setImages(?string $images): static
+    public function setImages(?string $images): self
     {
         $this->images = $images;
 
         return $this;
     }
 
-    public function getOficio(): ?oficio
+    public function getOficio(): ?Oficio
     {
         return $this->oficio;
     }
 
-    public function setOficio(?oficio $oficio): static
+    public function setOficio(?Oficio $oficio): self
     {
         $this->oficio = $oficio;
 
@@ -291,14 +291,14 @@ class Registro
     }
 
     /**
-     * @return Collection<int, delegacion>
+     * @return Collection<int, Delegacion>
      */
     public function getDelegacion(): Collection
     {
         return $this->delegacion;
     }
 
-    public function addDelegacion(delegacion $delegacion): static
+    public function addDelegacion(Delegacion $delegacion): self
     {
         if (!$this->delegacion->contains($delegacion)) {
             $this->delegacion->add($delegacion);
@@ -307,7 +307,7 @@ class Registro
         return $this;
     }
 
-    public function removeDelegacion(delegacion $delegacion): static
+    public function removeDelegacion(Delegacion $delegacion): self
     {
         $this->delegacion->removeElement($delegacion);
 
@@ -322,7 +322,7 @@ class Registro
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): static
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
@@ -332,7 +332,7 @@ class Registro
         return $this;
     }
 
-    public function removeComment(Comment $comment): static
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -340,6 +340,18 @@ class Registro
                 $comment->setRegistro(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -14,3 +14,8 @@ oficio_toggle_status:
     path: /oficio/{id}/toggle-status
     controller: App\Controller\OficioController::toggleStatus
     methods: POST
+
+registro_toggle_status:
+    path: /registro/{id}/toggle-status
+    controller: App\Controller\RegistroController::toggleStatus
+    methods: POST

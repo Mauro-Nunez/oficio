@@ -15,17 +15,29 @@ class FullListController extends AbstractController
     public function index(
         OficioRepository $oficioRepository,
         RecomendacionRepository $recomendacionRepository,
-        RegistroRepository $registroRepository
+        
     ): Response {
         // Obtener todos los oficios, recomendaciones y registros
         $oficios = $oficioRepository->findAll();
-        $recomendaciones = $recomendacionRepository->findAll();
-        $registros = $registroRepository->findAll();
-
+        $recomendaciones = $recomendacionRepository->findAll();  
         // Pasar los datos a la vista Twig
         return $this->render('full_list/index.html.twig', [
             'oficios' => $oficios,
             'recomendaciones' => $recomendaciones,
+            
+        ]);
+    }
+    #[Route('/register', name: 'app_full_register')]
+    public function regist(        
+        RegistroRepository $registroRepository
+    ): Response {
+        // Obtener todos los oficios, recomendaciones y registros
+        
+        $registros = $registroRepository->findAll();
+
+        // Pasar los datos a la vista Twig
+        return $this->render('full_list/registro.html.twig', [
+            
             'registros' => $registros,
         ]);
     }

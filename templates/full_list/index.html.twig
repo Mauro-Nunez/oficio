@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Listado completo{% endblock %}
+{% block title %}LISTADO COMPLETO{% endblock %}
 
 {% block body %}
 <div class="container">
-    <h1 class="my-4">Listado de Oficios</h1>
+<h1 class="my-4">    Listado de Oficios / <a href="{{ path('app_full_register') }}" class="text-decoration-none">Registro</a></h1>
 
     {# Botón para abrir el modal de agregar oficio #}
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAddOficio">

@@ -9,24 +9,36 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Repository\OficioRepository;
 
 class BusquedaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder                      
+        $builder
             ->add('oficio', EntityType::class, [
-                'class' => oficio::class,
+                'class' => Oficio::class,
                 'choice_label' => 'name',
-                
+                'query_builder' => function (OficioRepository $repo) {
+                    // Solo incluir oficios habilitados (status = 1)
+                    return $repo->createQueryBuilder('o')
+                                ->where('o.status = :status')
+                                ->setParameter('status', true);
+                },
+                'placeholder' => '-- SELECCIONAR UN OFICIO --', // Texto por defecto
+                'attr' => [
+                    'class' => 'form-control',
+                ],
             ])
             ->add('delegacion', EntityType::class, [
-                'class' => delegacion::class,
+                'class' => Delegacion::class,
                 'choice_label' => 'name',
                 'multiple' => true,
-                'expanded' => false,  // Si deseas que sea un menú desplegable en lugar de checkboxes
-            ])
-        ;
+                'expanded' => false, // Menú desplegable
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

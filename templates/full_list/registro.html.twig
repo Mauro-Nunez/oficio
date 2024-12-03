@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de Registros{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="my-4">    Listado de <a href="{{ path('app_full_list') }}" class="text-decoration-none">Oficios</a> / Registro</h1>
+
+    {# Botón para agregar un nuevo registro #}
+    <a href="{{ path('app_registro') }}" class="btn btn-success mb-3">
+        Agregar Nuevo Registro
+    </a>
+
+    {# Verifica si la lista de registros no está vacía #}
+    {% if registros is not empty %}
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Oficio</th>
+                    <th>Status</th>
+                                    </tr>
+            </thead>
+            <tbody>
+                {% for registro in registros %}
+                    <tr>
+                        <td>{{ registro.id }}</td>
+                        <td>{{ registro.name }}</td>
+                        <td>{{ registro.email }}</td>
+                        <td>{{ registro.phone }}</td>
+                        <td>{{ registro.address }}</td>
+                        <td>{{ registro.oficio.name }}</td>   
+                        <td>
+                        <button 
+                            class="btn {% if registro.status %}btn-success{% else %}btn-danger{% endif %}" 
+                            data-id="{{ registro.id }}" 
+                            data-status="{{ registro.status ? 'true' : 'false' }}" 
+                            onclick="toggleStatus(this)">
+                            {% if registro.status %}Habilitado{% else %}Deshabilitado{% endif %}
+                        </button>
+                    </td>                     
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No hay registros disponibles.
+        </div>
+    {% endif %}
+</div>
+<script>
+    async function toggleStatus(button) {
+        const id = button.getAttribute('data-id');
+        let currentStatus = button.getAttribute('data-status') === 'true';
+        let newStatus = !currentStatus;
+
+        try {
+            let response = await fetch(`/registro/${id}/toggle-status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+
+            if (!response.ok) {
+                console.error('Error en la respuesta del servidor.');
+                return;
+            }
+
+            window.location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>
+{% endblock %}
