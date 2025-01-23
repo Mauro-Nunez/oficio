@@ -58,6 +58,7 @@
 LISTA DE REGISTROS
 {% endblock %}
 
+
 {% block body %}
 <div style="position: absolute; top: 1rem; left: 1rem;">
     <a href="{{ path('app_oficio') }}" class="btn btn-secondary">
@@ -69,17 +70,28 @@ LISTA DE REGISTROS
     <img src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 75%;">
 </div>
 
-<div class="d-flex justify-content-center">
+
     <div class="card shadow-lg w-100" style="max-width: 90%;">
         <div class="d-flex justify-content-center my-2">
             <a href="{{ path('app_registro') }}" class="btn btn-success" style="height: 50px; width: 300px;">
                 REGISTRARSE
             </a>
         </div>
+
         <div class="card-body">
             <h2 class="text-center mb-4">FORMULARIO DE BÚSQUEDA</h2>
             {{ form_start(form) }}
             <div class="row mb-3">
+
+        <div class="card-body p-4">
+            <h2 class="text-center mb-4" style="font-size: 2rem; font-weight: bold;">FORMULARIO DE BÚSQUEDA</h2>
+
+
+            {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+
+            <div class="mb-3 row">
+
                 <div class="col-md-6">
                     {{ form_label(form.oficio, 'OFICIO', {'label_attr': {'class': 'form-label'}}) }}
                     {{ form_widget(form.oficio, {'attr': {'class': 'form-select'}}) }}
@@ -95,15 +107,32 @@ LISTA DE REGISTROS
                     </div>
                 </div>
             </div>
+
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">
                     BUSCAR
                 </button>
             </div>
             {{ form_end(form) }}
+
+ 
+            </div> 
+            <div class="d-flex justify-content-end my-2">
+                <button type="submit" class="btn btn-primary text-white d-flex align-items-center justify-content-center" style="height: 50px; width: 300px; background-color: #0d6efd; border-color: #0d6efd;">
+                    <span class="text-center">BUSCAR</span>
+                </button>
+            </div>
+            {{ form_end(form) }}
+
+
+
         </div>
     </div>
 </div>
+
+
+
+
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">LISTA DE REGISTROS</h2>
@@ -124,6 +153,7 @@ LISTA DE REGISTROS
                         </div>
                     </div>
 
+
                     <!-- Modal -->
                     <div class="modal fade" id="modal-{{ registro.id }}" tabindex="-1" aria-labelledby="modalLabel-{{ registro.id }}" aria-hidden="true">
                         <div class="modal-dialog">
@@ -131,6 +161,47 @@ LISTA DE REGISTROS
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalLabel-{{ registro.id }}">DETALLES DE {{ registro.name|upper }}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- Modal -->
+                <style>
+                    .modal-content {
+                        max-height: 80vh;
+                        overflow-y: scroll;
+                        padding: 2%;
+                    }
+                </style>
+                <div class="modal fade" id="modal-{{ registro.id }}" tabindex="-1" aria-labelledby="modalLabel-{{ registro.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel-{{ registro.id }}" style="font-size: 1.5rem;">DETALLES DE {{ registro.name|upper }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>NRO. DE REGISTRO:</strong> {{ registro.id }}</p>
+                                <p><strong>NOMBRE:</strong> {{ registro.name|upper }}</p>
+                                <p><strong>OFICIO:</strong> {{ registro.oficio.name|upper }}</p>
+                                <p><strong>DESCRIPCIÓN:</strong> {{ registro.description|upper }}</p>
+                                <p><strong>DOMICILIO LABORAL:</strong> {{ registro.workAddress|upper }}</p>
+                                <p><strong>TELÉFONO:</strong> {{ registro.phone|upper }}</p>
+                                <p><strong>EMAIL:</strong> {{ registro.email|upper }}</p>
+                                <p><strong>HORARIOS DE ATENCIÓN:</strong> {{ registro.time|upper }}</p>
+                                <p><strong>MÉTODOS DE PAGO:</strong> {{ registro.payment|upper }}</p>
+                                {% if registro.certification %}
+                                    <p><strong>CERTIFICACIÓN:</strong> SÍ</p>
+                                    <p><strong>INSTITUCIÓN CERTIFICANTE:</strong> {{ registro.institution|upper }}</p>
+                                {% else %}
+                                    <p><strong>CERTIFICACIÓN:</strong> NO</p>
+                                {% endif %}
+                                {% if registro.images %}
+                                    <p><strong>IMÁGENES:</strong> {% if registro.images %}<a href="{{ asset('images/products/' ~ registro.images) }}" target="_blank"><img src="{{ asset('images/products/' ~ registro.images) }}" width="100"></a>{% endif %}</p>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center flex-grow-1" data-bs-toggle="collapse" data-bs-target="#comentario-{{ registro.id }}" style="height: 50px;"><span class="text-center">NUEVO COMENTARIO</span></button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="height: 50px;">CERRAR</button>
+
                                 </div>
                                 <div class="modal-body">
                                     <p><strong>ID:</strong> {{ registro.id }}</p>
