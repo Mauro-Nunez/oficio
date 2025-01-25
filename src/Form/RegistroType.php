@@ -113,7 +113,8 @@ class RegistroType extends AbstractType
                 'query_builder' => function (OficioRepository $repo) {
                     return $repo->createQueryBuilder('o')
                         ->where('o.status = :status')
-                        ->setParameter('status', true);
+                        ->setParameter('status', true)
+                        ->orderBy('o.name', 'ASC');
                 },
                 'choice_label' => 'name',
                 'label' => 'Oficio',

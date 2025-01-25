@@ -23,7 +23,8 @@ class BusquedaType extends AbstractType
                     // Solo incluir oficios habilitados (status = 1)
                     return $repo->createQueryBuilder('o')
                                 ->where('o.status = :status')
-                                ->setParameter('status', true);
+                                ->setParameter('status', true)
+                                ->orderBy('o.name', 'ASC');
                 },
                 'placeholder' => '-- SELECCIONAR UN OFICIO --', // Texto por defecto
                 'attr' => [
