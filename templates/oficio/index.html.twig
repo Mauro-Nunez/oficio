@@ -23,16 +23,298 @@
         </p>
 
         <!-- Botones -->
-        <div class="space-x-4">
-            
+        <div class="flex flex-wrap justify-center gap-4">
             <a href="{{ path('app_lista') }}" class="bg-blue-500 text-xl text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition">
                 BUSCADOR
             </a>
             <a href="{{ path('app_registro') }}" class="bg-orange-500 text-xl text-white px-6 py-3 rounded-lg shadow-lg hover:bg-orange-600 transition">
                 REGISTRARSE
             </a>
+{#             <a href="{{ path('app_emprendimiento') }}" class="bg-green-500 text-xl text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-600 transition">
+                EMPRENDIMIENTOS
+            </a> #}
         </div>
     </div>
+
+    <!-- Sección de Videos -->
+    <div class="w-full max-w-7xl mx-auto px-4 pb-10 relative">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
+            Nuestros Usuarios
+        </h2>
+        
+        <!-- Slider Container -->
+        <div class="relative">
+            <!-- Botón Anterior -->
+            <button onclick="slideLeft()" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            
+            <!-- Botón Siguiente -->
+            <button onclick="slideRight()" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            
+            <!-- Slider Wrapper -->
+            <div class="overflow-hidden mx-12">
+                <div id="videoSlider" class="flex transition-transform duration-500 ease-in-out">
+                    {% set videos = [
+                        {
+                            'title': 'Cómo registrarse',
+                            'thumbnail': 'thumbnail1.jpg',
+                            'video': 'video1.mp4',
+                            'description': 'Aprende cómo registrarte en nuestra plataforma'
+                        },
+                        {
+                            'title': 'Buscar oficios',
+                            'thumbnail': 'thumbnail2.jpg',
+                            'video': 'video2.mp4',
+                            'description': 'Tutorial para buscar trabajadores por oficio'
+                        },
+                        {
+                            'title': 'Contactar trabajadores',
+                            'thumbnail': 'thumbnail3.jpg',
+                            'video': 'video3.mp4',
+                            'description': 'Cómo contactar a los trabajadores registrados'
+                        },
+                        {
+                            'title': 'Beneficios de registrarse',
+                            'thumbnail': 'thumbnail4.jpg',
+                            'video': 'video4.mp4',
+                            'description': 'Conoce todos los beneficios de estar registrado'
+                        },
+                        {
+                            'title': 'Testimonios',
+                            'thumbnail': 'thumbnail5.jpg',
+                            'video': 'video5.mp4',
+                            'description': 'Escucha las experiencias de nuestros usuarios'
+                        }
+                    ] %}
+                    
+                    {% for video in videos %}
+                    <div class="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-3">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300"
+                             onclick="openVideoModal('{{ asset('videos/' ~ video.video) }}', '{{ video.title }}')">
+                            <div class="relative aspect-video bg-gray-200">
+                                {% if video.thumbnail %}
+                                    <img src="{{ asset('videos/' ~ video.thumbnail) }}" 
+                                         alt="{{ video.title }}" 
+                                         class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="bg-black bg-opacity-50 rounded-full p-4 hover:bg-opacity-70 transition">
+                                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ video.title }}</h3>
+                                <p class="text-gray-600 text-sm">{{ video.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Indicadores -->
+            <div class="flex justify-center mt-6 gap-2">
+                {% for i in 0..videos|length-1 %}
+                <button onclick="slideTo({{ i }})" 
+                        class="slide-indicator w-2 h-2 rounded-full bg-gray-400 transition-all duration-300"
+                        data-index="{{ i }}"></button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para reproducir videos -->
+    <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full">
+            <button onclick="closeVideoModal()" 
+                    class="absolute -top-12 right-0 text-white hover:text-gray-300 transition">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div class="bg-black rounded-lg overflow-hidden">
+                <video id="videoPlayer" 
+                       controls 
+                       autoplay 
+                       class="w-full"
+                       controlsList="nodownload">
+                    <source src="" type="video/mp4">
+                    Tu navegador no soporta el elemento video.
+                </video>
+            </div>
+            <h3 id="videoTitle" class="text-white text-xl mt-4 text-center"></h3>
+        </div>
+    </div>
+
+    <script>
+        // Variables para el slider
+        let currentSlide = 0;
+        const slider = document.getElementById('videoSlider');
+        const totalSlides = {{ videos|length }};
+        let slidesPerView = 1;
+        let autoSlideInterval;
+        
+        // Detectar cantidad de slides visibles según el tamaño de pantalla
+        function updateSlidesPerView() {
+            if (window.innerWidth >= 1024) {
+                slidesPerView = 3;
+            } else if (window.innerWidth >= 768) {
+                slidesPerView = 2;
+            } else {
+                slidesPerView = 1;
+            }
+        }
+        
+        // Actualizar indicadores
+        function updateIndicators() {
+            document.querySelectorAll('.slide-indicator').forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('bg-orange-500', 'w-8');
+                    indicator.classList.remove('bg-gray-400', 'w-2');
+                } else {
+                    indicator.classList.remove('bg-orange-500', 'w-8');
+                    indicator.classList.add('bg-gray-400', 'w-2');
+                }
+            });
+        }
+        
+        // Mover slider a posición específica
+        function moveToSlide(index) {
+            currentSlide = index;
+            const slideWidth = 100 / slidesPerView;
+            slider.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+            updateIndicators();
+        }
+        
+        // Navegar a la izquierda
+        function slideLeft() {
+            currentSlide = currentSlide > 0 ? currentSlide - 1 : totalSlides - slidesPerView;
+            moveToSlide(currentSlide);
+            resetAutoSlide();
+        }
+        
+        // Navegar a la derecha
+        function slideRight() {
+            currentSlide = currentSlide < totalSlides - slidesPerView ? currentSlide + 1 : 0;
+            moveToSlide(currentSlide);
+            resetAutoSlide();
+        }
+        
+        // Ir a slide específico
+        function slideTo(index) {
+            currentSlide = Math.min(index, totalSlides - slidesPerView);
+            moveToSlide(currentSlide);
+            resetAutoSlide();
+        }
+        
+        // Auto-slide
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                slideRight();
+            }, 5000);
+        }
+        
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+        
+        // Touch/Swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        slider.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        slider.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                slideRight();
+            }
+            if (touchEndX > touchStartX + 50) {
+                slideLeft();
+            }
+        }
+        
+        // Modal functions
+        function openVideoModal(videoUrl, title) {
+            const modal = document.getElementById('videoModal');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            
+            videoPlayer.src = videoUrl;
+            videoTitle.textContent = title;
+            modal.classList.remove('hidden');
+            
+            // Pausar auto-slide
+            clearInterval(autoSlideInterval);
+            
+            // Reproducir el video
+            videoPlayer.play();
+        }
+        
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            // Pausar y resetear el video
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            
+            modal.classList.add('hidden');
+            
+            // Reanudar auto-slide
+            startAutoSlide();
+        }
+        
+        // Cerrar modal al hacer clic fuera del video
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+        
+        // Inicializar
+        window.addEventListener('load', () => {
+            updateSlidesPerView();
+            updateIndicators();
+            startAutoSlide();
+        });
+        
+        // Actualizar en resize
+        window.addEventListener('resize', () => {
+            updateSlidesPerView();
+            moveToSlide(Math.min(currentSlide, totalSlides - slidesPerView));
+        });
+    </script>
 </body>
 </html>
 

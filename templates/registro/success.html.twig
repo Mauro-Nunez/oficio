@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
 {% endblock %}
 
 {% block body %}
@@ -27,5 +28,109 @@
     </div>
 </div>
 <footer class="bg-orange-500 w-full py-4 mt-auto text-center text-white"></footer>
+
+<!-- Modal de Recomendaciones -->
+<div id="recommendationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div class="p-6">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">¡Ayúdanos a mejorar!</h3>
+            <p class="text-gray-600 mb-4">Tu opinión es muy importante para nosotros. ¿Tienes algún comentario o sugerencia sobre el proceso de registro?</p>
+            
+            <form id="recommendationForm" action="{{ path('app_crear_recomendacion') }}" method="POST">
+                <textarea 
+                    name="recomendacionText" 
+                    rows="4" 
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    placeholder="Escribe aquí tus comentarios..."
+                    maxlength="255"
+                    required
+                ></textarea>
+                
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" onclick="closeRecommendationModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition">
+                        Omitir
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mostrar el modal automáticamente cuando se carga la página
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.getElementById('recommendationModal').style.display = 'flex';
+        }, 1000); // Esperar 1 segundo antes de mostrar el modal
+    });
+    
+    // Función para cerrar el modal
+    function closeRecommendationModal() {
+        document.getElementById('recommendationModal').style.display = 'none';
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    document.getElementById('recommendationModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeRecommendationModal();
+        }
+    });
+    
+    // Manejar el envío del formulario con AJAX
+    document.getElementById('recommendationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const button = this.querySelector('button[type="submit"]');
+        
+        // Deshabilitar el botón mientras se envía
+        button.disabled = true;
+        button.textContent = 'Enviando...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar mensaje de éxito
+                const modalContent = document.querySelector('#recommendationModal .p-6');
+                modalContent.innerHTML = `
+                    <div class="text-center">
+                        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-800">¡Gracias por tu comentario!</h3>
+                        <p class="text-gray-600 mb-4">Tu opinión nos ayuda a mejorar nuestros servicios.</p>
+                        <button onclick="closeRecommendationModal()" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                            Cerrar
+                        </button>
+                    </div>
+                `;
+                
+                // Cerrar el modal automáticamente después de 3 segundos
+                setTimeout(closeRecommendationModal, 3000);
+            } else {
+                // Error al guardar
+                button.disabled = false;
+                button.textContent = 'Enviar';
+                alert('Hubo un error al enviar tu comentario. Por favor, intenta nuevamente.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            button.disabled = false;
+            button.textContent = 'Enviar';
+            alert('Hubo un error al enviar tu comentario. Por favor, intenta nuevamente.');
+        });
+    });
+</script>
 
 {% endblock %}
