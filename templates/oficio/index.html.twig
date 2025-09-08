@@ -63,35 +63,38 @@
                 <div id="videoSlider" class="flex transition-transform duration-500 ease-in-out">
                     {% set videos = [
                         {
-                            'title': 'Cómo registrarse',
-                            'thumbnail': 'thumbnail1.jpg',
-                            'video': 'video1.mp4',
-                            'description': 'Aprende cómo registrarte en nuestra plataforma'
+                            'title': '',
+                            'video': '1.mp4',
                         },
                         {
-                            'title': 'Buscar oficios',
-                            'thumbnail': 'thumbnail2.jpg',
-                            'video': 'video2.mp4',
-                            'description': 'Tutorial para buscar trabajadores por oficio'
+                            'title': '',
+                            'video': '2.mp4',
                         },
                         {
-                            'title': 'Contactar trabajadores',
-                            'thumbnail': 'thumbnail3.jpg',
-                            'video': 'video3.mp4',
-                            'description': 'Cómo contactar a los trabajadores registrados'
+                            'title': '',
+                            'video': '3.mp4',
                         },
                         {
-                            'title': 'Beneficios de registrarse',
-                            'thumbnail': 'thumbnail4.jpg',
-                            'video': 'video4.mp4',
-                            'description': 'Conoce todos los beneficios de estar registrado'
+                            'title': '',
+                            'video': '4.mp4',
                         },
                         {
-                            'title': 'Testimonios',
-                            'thumbnail': 'thumbnail5.jpg',
-                            'video': 'video5.mp4',
-                            'description': 'Escucha las experiencias de nuestros usuarios'
-                        }
+                            'title': '',
+                            'video': '5.mp4',
+                        },
+                        {
+                            'title': '',
+                            'video': '6.mp4',
+                        },
+                        {
+                            'title': '',
+                            'video': '7.mp4',
+                        },
+                        {
+                            'title': '',
+                            'video': '8.mp4',
+                        }            
+                        
                     ] %}
                     
                     {% for video in videos %}
@@ -99,17 +102,11 @@
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300"
                              onclick="openVideoModal('{{ asset('videos/' ~ video.video) }}', '{{ video.title }}')">
                             <div class="relative aspect-video bg-gray-200">
-                                {% if video.thumbnail %}
-                                    <img src="{{ asset('videos/' ~ video.thumbnail) }}" 
-                                         alt="{{ video.title }}" 
-                                         class="w-full h-full object-cover">
-                                {% else %}
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z"/>
-                                        </svg>
-                                    </div>
-                                {% endif %}
+                                <video class="w-full h-full object-cover"
+                                       muted
+                                       preload="metadata">
+                                    <source src="{{ asset('videos/' ~ video.video) }}#t=0.1" type="video/mp4">
+                                </video>
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="bg-black bg-opacity-50 rounded-full p-4 hover:bg-opacity-70 transition">
                                         <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
