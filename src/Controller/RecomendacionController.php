@@ -28,6 +28,7 @@ class RecomendacionController extends AbstractController
                 $recomendacion = new Recomendacion();
                 $recomendacion->setText($text);
                 $recomendacion->setDate(new \DateTime());
+                $recomendacion->setCreatedAt(new \DateTime());
 
                 // Guardar en la base de datos
                 $em->persist($recomendacion);

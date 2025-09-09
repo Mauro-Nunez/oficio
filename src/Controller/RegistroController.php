@@ -22,6 +22,9 @@ class RegistroController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Set creation date
+            $registro->setCreatedAt(new \DateTime());
+            
             $entityManager->persist($registro);
             $entityManager->flush();
 
