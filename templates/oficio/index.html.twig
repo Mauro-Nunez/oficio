@@ -101,27 +101,19 @@
                     <div class="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-3">
                         <div class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300"
                              onclick="openVideoModal('{{ asset('videos/' ~ video.video) }}', '{{ video.title }}')">
-                            <div class="relative aspect-video bg-gray-900 overflow-hidden group">
-                                <div class="video-thumbnail-container w-full h-full" data-video-src="{{ asset('videos/' ~ video.video) }}">
-                                    <!-- Placeholder mientras carga -->
-                                    <div class="w-full h-full flex items-center justify-center bg-gray-900">
-                                        <div class="text-center">
-                                            <svg class="w-16 h-16 text-gray-700 animate-pulse mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M8 5v14l11-7z"/>
-                                            </svg>
-                                            <div class="w-32 h-1 bg-gray-700 rounded-full mx-auto animate-pulse"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:bg-black group-hover:bg-opacity-30 transition-all duration-300">
-                                    <div class="bg-black bg-opacity-60 rounded-full p-3 md:p-4 group-hover:scale-110 transition-transform duration-300 shadow-2xl">
+                            <div class="relative aspect-video bg-gray-200 overflow-hidden group">
+                                <video class="video-thumbnail w-full h-full object-cover"
+                                       muted
+                                       preload="metadata"
+                                       data-src="{{ asset('videos/' ~ video.video) }}">
+                                    <source src="{{ asset('videos/' ~ video.video) }}#t=0.5" type="video/mp4">
+                                </video>
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:bg-black group-hover:bg-opacity-20 transition-all duration-300">
+                                    <div class="bg-black bg-opacity-50 rounded-full p-3 md:p-4 group-hover:scale-110 transition-transform duration-300 shadow-xl">
                                         <svg class="w-10 h-10 md:w-12 md:h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
                                     </div>
-                                </div>
-                                <div class="absolute top-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <span class="font-medium">Ver video</span>
                                 </div>
                             </div>
                             <div class="p-4">
@@ -146,129 +138,36 @@
     </div>
 
     <!-- Modal para reproducir videos -->
-    <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
-        <div class="relative max-w-4xl w-full">
+    <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50 flex items-center justify-center p-4 md:p-8">
+        <div class="relative w-full max-w-3xl mx-auto">
             <button onclick="closeVideoModal()" 
-                    class="absolute -top-12 right-0 text-white hover:text-gray-300 transition">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="absolute -top-10 right-0 md:-top-12 md:right-0 text-white hover:text-gray-300 transition z-10">
+                <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
-            <div class="bg-black rounded-lg overflow-hidden">
-                <video id="videoPlayer" 
-                       controls 
-                       autoplay 
-                       class="w-full"
-                       controlsList="nodownload">
-                    <source src="" type="video/mp4">
-                    Tu navegador no soporta el elemento video.
-                </video>
+            <div class="bg-black rounded-lg overflow-hidden shadow-2xl">
+                <div class="relative" style="padding-top: 56.25%;">
+                    <video id="videoPlayer" 
+                           controls 
+                           autoplay 
+                           class="absolute inset-0 w-full h-full"
+                           controlsList="nodownload"
+                           style="max-height: 80vh;">
+                        <source src="" type="video/mp4">
+                        Tu navegador no soporta el elemento video.
+                    </video>
+                </div>
             </div>
-            <h3 id="videoTitle" class="text-white text-xl mt-4 text-center"></h3>
+            <h3 id="videoTitle" class="text-white text-lg md:text-xl mt-4 text-center px-4"></h3>
         </div>
     </div>
 
     <script>
-        // Optimized video thumbnail loading with better quality
+        // Simple video thumbnail loading
         function loadVideoThumbnails() {
-            const containers = document.querySelectorAll('.video-thumbnail-container');
-            
-            const imageOptions = {
-                threshold: 0.01,
-                rootMargin: '200px 0px'
-            };
-
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const container = entry.target;
-                        const videoSrc = container.dataset.videoSrc;
-                        
-                        // Create canvas for high-quality thumbnail
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        
-                        // Create video element for thumbnail extraction
-                        const video = document.createElement('video');
-                        video.muted = true;
-                        video.crossOrigin = 'anonymous';
-                        
-                        let thumbnailLoaded = false;
-                        
-                        video.addEventListener('loadedmetadata', function() {
-                            // Set canvas size to video's native resolution
-                            const videoAspectRatio = video.videoWidth / video.videoHeight;
-                            const containerWidth = container.offsetWidth;
-                            const containerHeight = container.offsetHeight;
-                            
-                            // Calculate optimal dimensions
-                            let drawWidth, drawHeight;
-                            if (containerWidth / containerHeight > videoAspectRatio) {
-                                drawWidth = containerWidth;
-                                drawHeight = containerWidth / videoAspectRatio;
-                            } else {
-                                drawHeight = containerHeight;
-                                drawWidth = containerHeight * videoAspectRatio;
-                            }
-                            
-                            canvas.width = drawWidth;
-                            canvas.height = drawHeight;
-                            
-                            // Seek to a good frame
-                            video.currentTime = 1.0; // Try 1 second for better thumbnail
-                        });
-                        
-                        video.addEventListener('seeked', function() {
-                            if (!thumbnailLoaded) {
-                                // Draw high-quality frame
-                                ctx.imageSmoothingQuality = 'high';
-                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                
-                                // Create optimized image
-                                const img = document.createElement('img');
-                                img.className = 'w-full h-full object-cover';
-                                img.loading = 'lazy';
-                                
-                                // Use higher quality for better thumbnails
-                                canvas.toBlob(function(blob) {
-                                    const url = URL.createObjectURL(blob);
-                                    img.src = url;
-                                    
-                                    img.onload = function() {
-                                        container.innerHTML = '';
-                                        container.appendChild(img);
-                                        
-                                        // Clean up
-                                        URL.revokeObjectURL(url);
-                                        video.remove();
-                                        canvas.remove();
-                                    };
-                                }, 'image/jpeg', 0.85);
-                                
-                                thumbnailLoaded = true;
-                            }
-                        });
-                        
-                        // Fallback if seeking fails
-                        video.addEventListener('error', function() {
-                            // Show static thumbnail on error
-                            const fallback = document.createElement('video');
-                            fallback.muted = true;
-                            fallback.preload = 'metadata';
-                            fallback.className = 'w-full h-full object-cover';
-                            fallback.innerHTML = `<source src="${videoSrc}#t=0.1" type="video/mp4">`;
-                            
-                            container.innerHTML = '';
-                            container.appendChild(fallback);
-                        });
-                        
-                        video.src = videoSrc;
-                        observer.unobserve(container);
-                    }
-                });
-            }, imageOptions);
-
-            containers.forEach(container => imageObserver.observe(container));
+            // Videos already have preload="metadata" so they'll load their first frame automatically
+            // This is the simplest and most reliable approach
         }
 
         // Variables para el slider
