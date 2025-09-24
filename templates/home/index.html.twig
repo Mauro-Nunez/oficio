@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .main-container {
+        min-height: 100vh;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .logo-container {
+        max-width: 1000px;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .logo-container img {
+        width: 100%;
+        height: auto;
+        max-height: 500px;
+        object-fit: contain;
+    }
+    
+    .actions-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        max-width: 900px;
+    }
+    
+    .action-card {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        min-width: 350px;
+        max-width: 400px;
+        flex: 1;
+    }
+    
+    .card-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 25px;
+        text-align: center;
+        color: #333;
+    }
+    
+    .btn-primary-custom {
+        background-color: #ff6b35;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+    
+    .btn-primary-custom:hover {
+        background-color: #ff5722;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .btn-secondary-custom {
+        background-color: #2563eb;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+    
+    .btn-secondary-custom:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .footer-text {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    .footer-text h3 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #1a365d;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .footer-text p {
+        font-size: 1.4rem;
+        color: #1a365d;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .actions-container {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .action-card {
+            min-width: 100%;
+            max-width: 100%;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+        }
+        
+        .footer-text h3 {
+            font-size: 1.2rem;
+        }
+        
+        .footer-text p {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="main-container">
+    <div class="logo-container">
+        <img src="{{ asset('images/frame11-cropped.svg') }}" alt="Logo Principal">
+    </div>
+    
+    <div class="actions-container">
+        <div class="action-card">
+            <h2 class="card-title">Buscar Oficios</h2>
+            
+            {{ form_start(form, {'action': path('app_lista'), 'method': 'POST'}) }}
+                <div class="mb-4">
+                    {{ form_widget(form.oficio, {'attr': {'class': 'form-control form-control-lg', 'style': 'font-size: 1.2rem;'}}) }}
+                </div>
+                
+                <button type="submit" class="btn btn-primary-custom">
+                    Buscar
+                </button>
+            {{ form_end(form) }}
+        </div>
+        
+        <div class="action-card">
+            <h2 class="card-title">Registrarse</h2>
+            <p class="text-center mb-4" style="color: #666;">
+                ¿Sos profesional? Registrate para aparecer en las búsquedas
+            </p>
+            <a href="{{ path('app_registro') }}" class="btn btn-secondary-custom">
+                Registrarme
+            </a>
+        </div>
+    </div>
+    
+    <div class="footer-text">
+        <h3>MUNICIPIO DE GARUPÁ</h3>
+        <p>MISIONES</p>
+    </div>
+</div>
+{% endblock %}

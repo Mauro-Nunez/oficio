@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Oficio;
-use App\Entity\Delegacion;
 use App\Repository\RegistroRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -71,12 +70,6 @@ class Registro
     private ?Oficio $oficio = null;
 
     /**
-     * @var Collection<int, Delegacion>
-     */
-    #[ORM\ManyToMany(targetEntity: Delegacion::class, inversedBy: 'registros')]
-    private Collection $delegacion;
-
-    /**
      * @var Collection<int, Comment>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'registro')]
@@ -87,7 +80,6 @@ class Registro
 
     public function __construct()
     {
-        $this->delegacion = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
@@ -286,30 +278,6 @@ class Registro
     public function setOficio(?Oficio $oficio): self
     {
         $this->oficio = $oficio;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Delegacion>
-     */
-    public function getDelegacion(): Collection
-    {
-        return $this->delegacion;
-    }
-
-    public function addDelegacion(Delegacion $delegacion): self
-    {
-        if (!$this->delegacion->contains($delegacion)) {
-            $this->delegacion->add($delegacion);
-        }
-
-        return $this;
-    }
-
-    public function removeDelegacion(Delegacion $delegacion): self
-    {
-        $this->delegacion->removeElement($delegacion);
 
         return $this;
     }

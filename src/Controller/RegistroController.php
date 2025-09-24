@@ -38,6 +38,7 @@ class RegistroController extends AbstractController
     }
 
     #[Route('/buscar', name: 'app_lista')]
+    #[Route('/registro/busqueda', name: 'app_registro_busqueda')]
     public function lista(EntityManagerInterface $entityManager, Request $request): Response
     {
         $registro = new Registro();
@@ -48,9 +49,8 @@ class RegistroController extends AbstractController
         // Si se envía el formulario, buscar con los filtros aplicados
         if ($form->isSubmitted() && $form->isValid()) {
             $oficio = $registro->getOficio();
-            $delegaciones = $registro->getDelegacion()->toArray();
 
-            $lista = $entityManager->getRepository(Registro::class)->buscar($oficio, $delegaciones);
+            $lista = $entityManager->getRepository(Registro::class)->buscar($oficio, []);
 
             return $this->render('registro/lista.html.twig', [
                 'lista' => $lista,

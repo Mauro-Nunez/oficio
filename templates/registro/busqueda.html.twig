@@ -3,44 +3,180 @@
 {% block title %}Formulario de Busqueda{% endblock %}
 
 {% block stylesheets %}
-<link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
+<style>
+    body {
+        background-color: white;
+        min-height: 100vh;
+    }
+    
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .logo-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .logo-section img {
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+    }
+    
+    .search-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: none;
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(135deg, #001E5A 0%, #003d82 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .card-header-custom h2 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .form-section {
+        padding: 2rem 3rem 3rem;
+    }
+    
+    .form-control-search {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1rem;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        color: #333;
+        text-transform: uppercase;
+    }
+    
+    .form-control-search:focus {
+        border-color: #001E5A;
+        box-shadow: 0 0 0 0.2rem rgba(0, 30, 90, 0.1);
+        background-color: white;
+        color: #333;
+    }
+    
+    .btn-search {
+        background: linear-gradient(135deg, #001E5A 0%, #003d82 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 30, 90, 0.3);
+        color: white !important;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 20px rgba(0, 30, 90, 0.4);
+        background: linear-gradient(135deg, #003d82 0%, #001E5A 100%);
+        color: white !important;
+    }
+    
+    .btn-register {
+        background: transparent;
+        border: 2px solid #001E5A;
+        color: #001E5A;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        text-transform: uppercase;
+        width: 100%;
+    }
+    
+    .btn-register:hover {
+        background-color: #001E5A;
+        color: white;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+    
+    .divider {
+        margin: 1.5rem 0;
+        text-align: center;
+        position: relative;
+    }
+    
+    .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #e0e0e0;
+    }
+    
+    .divider span {
+        background-color: white;
+        padding: 0 1rem;
+        position: relative;
+        color: #666;
+        font-size: 0.9rem;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-<div class="container text-center my-5">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 75%;">
+<div class="search-container py-5">
+    <div class="logo-section">
+        <img src="{{ asset('images/frame11-cropped.svg') }}" alt="Logo">
     </div>
-<div class="min-vh-100 d-flex justify-content-center align-items-center bg-light">
-    <div class="row w-100">
-        <div class="col-12 col-md-8 col-lg-6 mx-auto">
-             <div class="card shadow-lg w-100" style="max-width: 500px;">
-                <div class="card-body p-4">
-            <h2 class="text-center mb-4">Formulario de Busqueda</h2>
-
+    
+    <div class="search-card">
+        <div class="card-header-custom">
+            <h2>Buscar Oficios</h2>
+        </div>
+        
+        <div class="form-section">
             {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
-
-                 <div class="mb-3">
-                {{ form_label(form.oficio, 'Oficio', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.oficio, {'attr': {'class': 'form-control', 'placeholder': 'INGRESE OFICIO', 'style': 'font-size: 1.5rem; text-transform: uppercase'}}) }}
+            
+            <div class="mb-4">
+                {{ form_widget(form.oficio, {'attr': {'class': 'form-control form-control-search', 'placeholder': 'SELECCIONE UN OFICIO'}}) }}
                 <div class="invalid-feedback">
                     {{ form_errors(form.oficio) }}
                 </div>
             </div>
-
-            <div class="mb-3">
-                {{ form_label(form.delegacion, 'Delegacion', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.delegacion, {'attr': {'class': 'form-control', 'placeholder': 'Ingrese su correo'}}) }}
-                <div class="invalid-feedback">
-                    {{ form_errors(form.delegacion) }}
-                </div>
-            </div>      
-                        <a href="{{ path('app_registro') }}" class="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-orange-600 transition">
+            
+            <button type="submit" class="btn btn-search">
+                BUSCAR
+            </button>
+            
+            <div class="divider">
+                <span>¿No estás registrado?</span>
+            </div>
+            
+            <a href="{{ path('app_registro') }}" class="btn-register">
                 REGISTRARSE
             </a>
+            
             {{ form_end(form) }}
         </div>
-    </div>
-    </div>
     </div>
 </div>
 {% endblock %}

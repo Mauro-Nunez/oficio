@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Delegacion;
 use App\Entity\Oficio;
 use App\Entity\Registro;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -120,17 +119,6 @@ class RegistroType extends AbstractType
                 'label' => 'Oficio',
                 'placeholder' => '-- SELECCIONAR UN OFICIO --',
                 'attr' => ['class' => 'form-select'],
-            ])
-            // Delegación
-            ->add('delegacion', EntityType::class, [
-                'class' => Delegacion::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => true,
-                'choice_attr' => function () {
-                    return ['class' => 'form-check-input me-3 mb-3'];
-                },
-                'label' => 'Delegación',
             ]);
     }
 

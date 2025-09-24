@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Delegacion;
 use App\Entity\Oficio;
 use App\Entity\Registro;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,15 +26,6 @@ class BusquedaType extends AbstractType
 				->orderBy('o.name', 'ASC');
                 },
                 'placeholder' => '-- SELECCIONAR UN OFICIO --', // Texto por defecto
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-            ])
-            ->add('delegacion', EntityType::class, [
-                'class' => Delegacion::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => false, // Menú desplegable
                 'attr' => [
                     'class' => 'form-control',
                 ],

@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: oficio_php_prod
+    build: .
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/docker-php-config.ini
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+    networks:
+      - oficio-network
+      - traefik-network
+    labels:
+      - "traefik.enable=false"
+
+  nginx:
+    container_name: oficio_nginx_prod
+    image: nginx:alpine
+    ports:
+      - "8082:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - oficio-network
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.oficio.rule=Host(`oficiosgarupa.com.ar`) || Host(`www.oficiosgarupa.com.ar`)"
+      - "traefik.http.routers.oficio.entrypoints=websecure"
+      - "traefik.http.routers.oficio.tls=true"
+      - "traefik.http.routers.oficio.tls.certresolver=letsencrypt"
+      - "traefik.http.services.oficio.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik-network"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.oficio-http.rule=Host(`oficiosgarupa.com.ar`) || Host(`www.oficiosgarupa.com.ar`)"
+      - "traefik.http.routers.oficio-http.entrypoints=web"
+      - "traefik.http.routers.oficio-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+
+  mysql:
+    container_name: oficio_mysql_prod
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_prod
+      MYSQL_DATABASE: gustavo
+      MYSQL_USER: gustavo
+      MYSQL_PASSWORD: prod_password_12345678
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - oficio-network
+
+volumes:
+  mysql_data:
+
+networks:
+  oficio-network:
+    driver: bridge
+  traefik-network:
+    external: true

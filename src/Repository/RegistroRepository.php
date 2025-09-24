@@ -16,17 +16,14 @@ class RegistroRepository extends ServiceEntityRepository
         parent::__construct($registry, Registro::class);
     }
 /**
-     * Método personalizado para buscar registros por oficio y delegación.
+     * Método personalizado para buscar registros por oficio.
      */
     public function buscar($oficio, array $delegaciones)
     {
         return $this->createQueryBuilder('r')
-            ->join('r.delegacion', 'd')  // Hacemos un JOIN con la tabla delegacion
             ->andWhere('r.oficio = :oficio')
-            ->andWhere('d.id IN (:delegaciones)')  // Filtramos usando los IDs de las delegaciones
             ->orderBy('r.name','ASC')
 		->setParameter('oficio', $oficio)
-            ->setParameter('delegaciones', $delegaciones)
             ->getQuery()
             ->getResult();
     }

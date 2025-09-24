@@ -1,19 +1,12 @@
 services:
   php:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: oficio-php:latest
     container_name: oficio_php
     restart: unless-stopped
-    user: "1000:1000"
-    volumes:
-      - .:/var/www
-      - ./var:/var/www/var:rw
-      - ./public/images/products:/var/www/public/images/products:rw
     environment:
       DATABASE_URL: "mysql://gustavo:12345678@database:3306/oficio?serverVersion=8.0"
-      APP_ENV: "dev"
-      APP_DEBUG: "1"
+      APP_ENV: "prod"
+      APP_DEBUG: "0"
     depends_on:
       database:
         condition: service_healthy
@@ -25,9 +18,9 @@ services:
     container_name: oficio_nginx
     restart: unless-stopped
     ports:
-      - "8082:80"
+      - "80:80"
     volumes:
-      - .:/var/www:ro
+      - ./public:/var/www/public:ro
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php
@@ -43,8 +36,6 @@ services:
       MYSQL_DATABASE: oficio
       MYSQL_USER: gustavo
       MYSQL_PASSWORD: 12345678
-    ports:
-      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
