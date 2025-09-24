@@ -13,11 +13,11 @@ chmod 600 traefik/acme.json
 
 # Stop existing containers
 echo "📦 Stopping existing containers..."
-docker-compose -f docker-compose.prod.yaml down
+docker compose -f docker-compose.prod.yaml down
 
 # Build the application
 echo "🔨 Building application..."
-docker-compose -f docker-compose.prod.yaml build
+docker compose -f docker-compose.prod.yaml build
 
 # Copy .env file for production
 if [ ! -f .env.prod ]; then
@@ -30,7 +30,7 @@ fi
 
 # Start containers
 echo "🎯 Starting containers..."
-docker-compose -f docker-compose.prod.yaml up -d
+docker compose -f docker-compose.prod.yaml up -d
 
 # Wait for PHP container to be ready
 echo "⏳ Waiting for PHP container..."
