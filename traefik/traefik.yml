@@ -34,14 +34,14 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: admin@oficiosgarupa.com.ar  # Change this to your email
+      email: mauro@example.com  # Change this to your actual email
       storage: /acme.json
       httpChallenge:
         entryPoint: web
       # Uncomment for production
-      # caServer: https://acme-v02.api.letsencrypt.org/directory
+      caServer: https://acme-v02.api.letsencrypt.org/directory
       # Comment out for production (this is for testing)
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
 
 log:
   level: INFO

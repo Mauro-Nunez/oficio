@@ -24,6 +24,9 @@ RUN apk add --no-cache \
     curl \
     git
 
+# Create symlink for php
+RUN ln -s /usr/bin/php82 /usr/bin/php
+
 # Install Composer manually without Docker Hub
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
