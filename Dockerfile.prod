@@ -21,6 +21,8 @@ RUN apk add --no-cache \
     php82-json \
     php82-phar \
     php82-openssl \
+    php82-simplexml \
+    php82-xmlwriter \
     curl \
     git
 
