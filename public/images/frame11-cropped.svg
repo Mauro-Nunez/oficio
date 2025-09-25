@@ -19,5 +19,5 @@
 <!-- Vertical rectangle translated up by 75 pixels -->
 <rect x="620" y="101" width="6" height="131" rx="3" fill="#001E5A"/>
 <!-- Footer text: MUNICIPIO DE GARUPA -->
-<text x="469.5" y="320" font-family="Arial, sans-serif" font-size="20" font-weight="600" fill="#001E5A" text-anchor="middle">MUNICIPIO DE GARUPA</text>
+<text x="469.5" y="310" font-family="Arial, sans-serif" font-size="20" font-weight="600" fill="#001E5A" text-anchor="middle">MUNICIPIO DE GARUPÁ</text>
 </svg>
