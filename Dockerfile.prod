@@ -1,15 +1,28 @@
-FROM php:8.2-fpm
+FROM alpine:3.18
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
+# Install PHP and dependencies
+RUN apk add --no-cache \
+    php82 \
+    php82-fpm \
+    php82-pdo \
+    php82-pdo_mysql \
+    php82-intl \
+    php82-zip \
+    php82-opcache \
+    php82-ctype \
+    php82-curl \
+    php82-mbstring \
+    php82-xml \
+    php82-dom \
+    php82-tokenizer \
+    php82-session \
+    php82-fileinfo \
+    php82-iconv \
+    php82-json \
+    php82-phar \
+    php82-openssl \
     curl \
-    unzip \
-    libicu-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql intl zip opcache \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    git
 
 # Install Composer manually without Docker Hub
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -37,21 +50,22 @@ RUN mkdir -p var/cache var/log var/sessions public/images/products \
     && chmod -R 777 public/images/products
 
 # Configure PHP for production
-RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.max_accelerated_files=20000" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/conf.d/opcache.ini \
-    && echo "upload_max_filesize=20M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "post_max_size=20M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "expose_php=Off" >> /usr/local/etc/php/conf.d/security.ini \
-    && echo "display_errors=Off" >> /usr/local/etc/php/conf.d/security.ini \
-    && echo "log_errors=On" >> /usr/local/etc/php/conf.d/security.ini
+RUN echo "opcache.enable=1" >> /etc/php82/conf.d/opcache.ini \
+    && echo "opcache.memory_consumption=256" >> /etc/php82/conf.d/opcache.ini \
+    && echo "opcache.max_accelerated_files=20000" >> /etc/php82/conf.d/opcache.ini \
+    && echo "opcache.validate_timestamps=0" >> /etc/php82/conf.d/opcache.ini \
+    && echo "upload_max_filesize=20M" >> /etc/php82/conf.d/uploads.ini \
+    && echo "post_max_size=20M" >> /etc/php82/conf.d/uploads.ini \
+    && echo "expose_php=Off" >> /etc/php82/conf.d/security.ini \
+    && echo "display_errors=Off" >> /etc/php82/conf.d/security.ini \
+    && echo "log_errors=On" >> /etc/php82/conf.d/security.ini
 
 # Configure PHP-FPM
-RUN sed -i 's/pm = dynamic/pm = ondemand/g' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/pm.max_children = 5/pm.max_children = 50/g' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/;pm.process_idle_timeout = 10s/pm.process_idle_timeout = 10s/g' /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i 's/pm = dynamic/pm = ondemand/g' /etc/php82/php-fpm.d/www.conf \
+    && sed -i 's/pm.max_children = 5/pm.max_children = 50/g' /etc/php82/php-fpm.d/www.conf \
+    && sed -i 's/;pm.process_idle_timeout = 10s/pm.process_idle_timeout = 10s/g' /etc/php82/php-fpm.d/www.conf \
+    && sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php82/php-fpm.d/www.conf
 
 EXPOSE 9000
 
-CMD ["php-fpm"]
+CMD ["php-fpm82", "-F"]
