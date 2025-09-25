@@ -15,7 +15,7 @@ if [ ! -f .env.prod ]; then
     cat > .env.prod << 'EOF'
 APP_ENV=prod
 APP_DEBUG=0
-DATABASE_URL="mysql://gustavo:prod_password_12345678@oficio_mysql_prod:3306/gustavo?serverVersion=8.0"
+DATABASE_URL="mysql://gustavo:prod_password_12345678@mysql:3306/gustavo?serverVersion=8.0"
 MAILER_DSN="smtp://registrodeoficios.ar@gmail.com:pljywrotbeifctza@smtp.gmail.com:587"
 EOF
 fi
@@ -53,11 +53,11 @@ docker exec oficio_php_prod chmod -R 777 var/ || true
 
 # Check status
 echo "📊 Checking container status..."
-docker-compose -f docker-compose.prod.yaml ps
+docker compose -f docker-compose.prod.yaml ps
 
 # Start Traefik if not running
 echo "🚀 Starting Traefik..."
-cd traefik && docker-compose -f docker-compose.traefik.yaml up -d || echo "Traefik might already be running"
+cd traefik && docker compose -f docker-compose.traefik.yaml up -d || echo "Traefik might already be running"
 cd ..
 
 echo "✅ Deployment complete!"
