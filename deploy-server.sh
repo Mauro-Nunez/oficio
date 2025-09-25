@@ -23,6 +23,9 @@ fi
 # Copy .env.prod to .env for the build
 cp .env.prod .env
 
+# Ensure the DATABASE_URL uses the correct hostname
+sed -i 's/@database:/@mysql:/g' .env
+
 # Stop existing containers
 echo "📦 Stopping existing containers..."
 docker compose -f docker-compose.prod.yaml down || true
