@@ -16,4 +16,4 @@ FLUSH PRIVILEGES;
 EOF
 fi
 
-exec mysqld --user=mysql --console
+exec mysqld --user=mysql --console --bind-address=0.0.0.0
