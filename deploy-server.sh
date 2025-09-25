@@ -74,6 +74,10 @@ sleep 10
 echo "📝 Creating .env.local with correct database configuration..."
 docker exec oficio_php_prod sh -c 'echo "DATABASE_URL=\"mysql://gustavo:prod_password_12345678@mysql:3306/gustavo?serverVersion=8.0.31\"" > /var/www/.env.local'
 
+# Clear cache completely before migrations
+echo "🧹 Clearing cache before migrations..."
+docker exec oficio_php_prod rm -rf /var/www/var/cache/*
+
 # Run migrations
 echo "🗄️  Running database migrations..."
 docker exec oficio_php_prod php bin/console doctrine:migrations:migrate --no-interaction --env=prod || echo "Migrations might already be up to date"
