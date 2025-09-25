@@ -4,6 +4,8 @@
 
 echo "🚀 Starting deployment for oficiosgarupa.com.ar"
 
+# No Docker login needed - we'll use public mirrors
+
 # Create traefik network if it doesn't exist
 docker network create traefik-network 2>/dev/null || echo "Network traefik-network already exists"
 
