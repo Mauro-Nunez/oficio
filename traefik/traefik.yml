@@ -19,8 +19,6 @@ entryPoints:
         certResolver: letsencrypt
         domains:
           - main: oficiosgarupa.com.ar
-            sans:
-              - www.oficiosgarupa.com.ar
 
 providers:
   docker:

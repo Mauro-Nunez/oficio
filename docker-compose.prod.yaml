@@ -38,14 +38,14 @@ services:
       - traefik-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.oficio.rule=Host(`oficiosgarupa.com.ar`) || Host(`www.oficiosgarupa.com.ar`)"
+      - "traefik.http.routers.oficio.rule=Host(`oficiosgarupa.com.ar`)"
       - "traefik.http.routers.oficio.entrypoints=websecure"
       - "traefik.http.routers.oficio.tls=true"
       - "traefik.http.routers.oficio.tls.certresolver=letsencrypt"
       - "traefik.http.services.oficio.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik-network"
       # HTTP to HTTPS redirect
-      - "traefik.http.routers.oficio-http.rule=Host(`oficiosgarupa.com.ar`) || Host(`www.oficiosgarupa.com.ar`)"
+      - "traefik.http.routers.oficio-http.rule=Host(`oficiosgarupa.com.ar`)"
       - "traefik.http.routers.oficio-http.entrypoints=web"
       - "traefik.http.routers.oficio-http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
