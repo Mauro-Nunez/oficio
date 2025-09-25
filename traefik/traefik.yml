@@ -34,7 +34,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: mauro@example.com  # Change this to your actual email
+      email: registrodeoficios.ar@gmail.com  # Change this to your actual email
       storage: /acme.json
       httpChallenge:
         entryPoint: web
