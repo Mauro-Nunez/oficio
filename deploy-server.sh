@@ -25,14 +25,14 @@ cp .env.prod .env
 
 # Stop existing containers
 echo "📦 Stopping existing containers..."
-docker-compose -f docker-compose.prod.yaml down || true
+docker compose -f docker-compose.prod.yaml down || true
 
 # Build without cache
 echo "🔨 Building application locally..."
-DOCKER_BUILDKIT=0 docker-compose -f docker-compose.prod.yaml build --no-cache
+DOCKER_BUILDKIT=0 docker compose -f docker-compose.prod.yaml build --no-cache
 
 echo "🎯 Starting containers..."
-docker-compose -f docker-compose.prod.yaml up -d
+docker compose -f docker-compose.prod.yaml up -d
 
 # Wait for services
 echo "⏳ Waiting for services to be ready..."
